@@ -1,7 +1,5 @@
 package com.artifex.mupdfdemo;
 
-import java.util.LinkedList;
-
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.LinkedList;
 
 public class ChoosePDFAdapter extends BaseAdapter {
 	private final LinkedList<ChoosePDFItem> mItems;
@@ -40,6 +40,7 @@ public class ChoosePDFAdapter extends BaseAdapter {
 		return 0;
 	}
 
+	//注释 给不同类型设置不同icon：TODO 不同格式文件不同icon
 	private int iconForType(ChoosePDFItem.Type type) {
 		switch (type) {
 		case PARENT: return R.drawable.ic_arrow_up;

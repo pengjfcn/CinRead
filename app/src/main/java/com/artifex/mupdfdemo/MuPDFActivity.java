@@ -70,9 +70,11 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
             Toast.makeText(MuPDFActivity.this, "恢复", Toast.LENGTH_SHORT).show();
             pageView.redoDraw();
         } else if (v == mInkColor) {
-            Toast.makeText(MuPDFActivity.this, "选择画笔颜色", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MuPDFActivity.this, "选择画笔透明度", Toast.LENGTH_SHORT).show();
+            selectColor();
         } else if (v == mInkBold) {
             Toast.makeText(MuPDFActivity.this, "选择画笔粗细", Toast.LENGTH_SHORT).show();
+            selectBold();
         }
 
         //TODO 新增按钮的点击事件
@@ -131,6 +133,14 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
             default:
                 break;
         }
+    }
+
+    private void selectColor() {
+        //
+    }
+    private void selectBold(){
+        //
+
     }
 
     /* The core rendering instance */

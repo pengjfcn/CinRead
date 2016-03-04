@@ -125,9 +125,6 @@ public class ChoosePDFActivity extends ListActivity {
 								return true;
 							if (fname.endsWith(".tiff"))
 								return true;
-							//注释 bmp
-							if (fname.endsWith(".bmp"))
-								return true;
 							//注释  显示txt格式文件
 							if (fname.endsWith(".txt"))
 								return true;
@@ -207,22 +204,29 @@ public class ChoosePDFActivity extends ListActivity {
 		}
 
 		position -= mDirs.length;
-
-		Uri uri = Uri.parse(mFiles[position].getAbsolutePath());
-		Intent intent = new Intent(this,MuPDFActivity.class);
-		intent.setAction(Intent.ACTION_VIEW);
-		intent.setData(uri);
-		switch (mPurpose) {
-		case PickPDF:
-			Toast.makeText(ChoosePDFActivity.this, "PickPDF", Toast.LENGTH_SHORT).show();
-			// Start an activity to display the PDF file
-			startActivity(intent);
-			break;
-		case PickKeyFile:
-			// Return the uri to the caller
-			setResult(RESULT_OK, intent);
-			finish();
-			break;
+		String path = mFiles[position].getAbsolutePath();
+		if(path.endsWith("txt")){
+			Toast.makeText(ChoosePDFActivity.this, "PickTXT", Toast.LENGTH_SHORT).show();
+			//如果点击了txt格式文件，跳转至txt解码器  TODO txt解码
+//			startActivity(new Intent(this,TXTActivity.class));
+		}else {
+			//打开正确的PDF
+			Uri uri = Uri.parse(path);
+			Intent intent = new Intent(this, MuPDFActivity.class);
+			intent.setAction(Intent.ACTION_VIEW);
+			intent.setData(uri);
+			switch (mPurpose) {
+				case PickPDF:
+					Toast.makeText(ChoosePDFActivity.this, "PickPDF", Toast.LENGTH_SHORT).show();
+					// Start an activity to display the PDF file
+					startActivity(intent);
+					break;
+				case PickKeyFile:
+					// Return the uri to the caller
+					setResult(RESULT_OK, intent);
+					finish();
+					break;
+			}
 		}
 	}
 
