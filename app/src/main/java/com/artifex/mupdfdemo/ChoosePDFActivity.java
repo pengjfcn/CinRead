@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.cinread.ebook.TXTActivity;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
@@ -206,9 +208,12 @@ public class ChoosePDFActivity extends ListActivity {
 		position -= mDirs.length;
 		String path = mFiles[position].getAbsolutePath();
 		if(path.endsWith("txt")){
-			Toast.makeText(ChoosePDFActivity.this, "PickTXT", Toast.LENGTH_SHORT).show();
+			Toast.makeText(ChoosePDFActivity.this, "PickTXT "+path, Toast.LENGTH_SHORT).show();
 			//如果点击了txt格式文件，跳转至txt解码器  TODO txt解码
-//			startActivity(new Intent(this,TXTActivity.class));
+			Intent intent = new Intent(this, TXTActivity.class);
+			intent.setAction(Intent.ACTION_VIEW);
+			intent.setData(Uri.parse("file://"+path));
+			startActivity(intent);
 		}else {
 			//打开正确的PDF
 			Uri uri = Uri.parse(path);

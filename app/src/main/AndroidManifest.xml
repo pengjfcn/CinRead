@@ -95,6 +95,19 @@
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
             android:label="@string/print">
         </activity>
+        <activity
+            android:name="com.cinread.ebook.TXTActivity"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="file"/>
+                <data android:mimeType="*/*"/>
+                <data android:pathPattern=".*\\.txt"/>
+                <data android:host="*"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
