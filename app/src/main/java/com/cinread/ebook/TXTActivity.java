@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.lfk.justwetools.View.ReadView.ReadView;
+import com.cinread.ebook.ReadView.ReadView;
 
 import java.io.File;
 
@@ -17,6 +17,7 @@ import java.io.File;
  */
 public class TXTActivity extends Activity {
     private ReadView readView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
