@@ -164,6 +164,16 @@ public class MuPDFReflowView extends WebView implements MuPDFView {
 	public void releaseBitmaps() {
 	}
 
+	@Override
+	public void setINK_THICKNESS(float INK_THICKNESS) {
+
+	}
+
+	@Override
+	public void setINK_COLOR(int INK_COLOR) {
+
+	}
+
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {

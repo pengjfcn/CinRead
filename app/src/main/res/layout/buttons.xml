@@ -444,6 +444,22 @@
 		</LinearLayout>
 	</ViewAnimator>
 
+		<SeekBar
+			android:visibility="gone"
+		android:layout_above="@id/lowerButton"
+			android:id="@+id/sb_progress"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:thumb="@drawable/seek_thumb"
+			android:progressDrawable="@drawable/seek_progress"
+			android:paddingLeft="16dp"
+			android:paddingRight="16dp"
+			android:paddingTop="8dp"
+			android:paddingBottom="8dp"
+			android:background="@color/toolbar"
+			/>
+
 	<!--将seekbar换成跟touch mode 形式，主要放一些绘制相关的逻辑-->
 
 	<RelativeLayout

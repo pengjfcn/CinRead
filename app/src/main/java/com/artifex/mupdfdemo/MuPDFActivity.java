@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
@@ -43,7 +42,6 @@ import com.cinread.ebook.utils.LogUtils;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
 class ThreadPerTaskExecutor implements Executor {
@@ -55,27 +53,60 @@ class ThreadPerTaskExecutor implements Executor {
 public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupport, View
         .OnClickListener {
     private static final String TAG = "MuPDFActivity";
-    private PageView mPagerView;
-    private ArrayList<ArrayList<PointF>> mDrawing;
 
 
     @Override
     public void onClick(View v) {
         //底部的按钮
-            MuPDFView pageView = (MuPDFView) mDocView.getDisplayedView();
+        final MuPDFView pageView = (MuPDFView) mDocView.getDisplayedView();
         if (v == mInkBack) {
             Toast.makeText(MuPDFActivity.this, "撤销", Toast.LENGTH_SHORT).show();
             pageView.undoDraw();
+            mSeekBar.setVisibility(View.INVISIBLE);
         } else if (v == mInkForward) {
             Toast.makeText(MuPDFActivity.this, "恢复", Toast.LENGTH_SHORT).show();
             pageView.redoDraw();
-        } else if (v == mInkColor) {
-            Toast.makeText(MuPDFActivity.this, "选择画笔透明度", Toast.LENGTH_SHORT).show();
-            selectColor();
-        } else if (v == mInkBold) {
-            Toast.makeText(MuPDFActivity.this, "选择画笔粗细", Toast.LENGTH_SHORT).show();
-            selectBold();
+            mSeekBar.setVisibility(View.INVISIBLE);
+        } else {
+            //设置seekbar
+            mSeekBar.setVisibility(View.VISIBLE);
+            if (v == mInkColor) {
+                Toast.makeText(MuPDFActivity.this, "选择画笔透明度", Toast.LENGTH_SHORT).show();
+            mSeekBar.setMax(255);
+                mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        pageView.setINK_COLOR(Color.argb(progress, 0, 0, 0));
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                    }
+                });
+            } else if (v == mInkBold) {
+                Toast.makeText(MuPDFActivity.this, "选择画笔粗细", Toast.LENGTH_SHORT).show();
+                mSeekBar.setMax(20);
+                mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        pageView.setINK_THICKNESS(progress+0.5f);
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                    }
+                });
+            }
         }
+
 
         //TODO 新增按钮的点击事件
         //分情况：因为有四种模式，分别是highlight，underline，strike-out,ink
@@ -135,14 +166,6 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
         }
     }
 
-    private void selectColor() {
-        //
-    }
-    private void selectBold(){
-        //
-
-    }
-
     /* The core rendering instance */
     enum TopBarMode {
         Main, Search, Annot, Delete, More, Accept
@@ -170,6 +193,9 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
     private ImageButton  mInkForward;
     private ImageButton  mInkColor;
     private ImageButton  mInkBold;
+
+    //注释 添加seekbar选择颜色和粗细
+    private SeekBar mSeekBar;
 
 
     private MuPDFCore       core;
@@ -293,23 +319,23 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
                 switch (result.buttonGroupType) {
                     case OkCancel:
                         mAlertDialog.setButton(AlertDialog.BUTTON2, getString(R.string.cancel),
-								listener);
+                                listener);
                         pressed[1] = MuPDFAlert.ButtonPressed.Cancel;
                     case Ok:
                         mAlertDialog.setButton(AlertDialog.BUTTON1, getString(R.string.okay),
-								listener);
+                                listener);
                         pressed[0] = MuPDFAlert.ButtonPressed.Ok;
                         break;
                     case YesNoCancel:
                         mAlertDialog.setButton(AlertDialog.BUTTON3, getString(R.string.cancel),
-								listener);
+                                listener);
                         pressed[2] = MuPDFAlert.ButtonPressed.Cancel;
                     case YesNo: //注释  绘制完毕后提示是否保存
                         mAlertDialog.setButton(AlertDialog.BUTTON1, getString(R.string.yes),
-								listener);
+                                listener);
                         pressed[0] = MuPDFAlert.ButtonPressed.Yes;
                         mAlertDialog.setButton(AlertDialog.BUTTON2, getString(R.string.no),
-								listener);
+                                listener);
                         pressed[1] = MuPDFAlert.ButtonPressed.No;
                         break;
                 }
@@ -391,10 +417,6 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
         super.onCreate(savedInstanceState);
 
 
-
-
-
-
         mAlertBuilder = new AlertDialog.Builder(this);
         gAlertBuilder = mAlertBuilder;  //  keep a static copy of this that other classes can use
 
@@ -433,7 +455,7 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
                         // hard to test as the file manager seems to have changed in 4.x.
                         try {
                             Cursor cursor = getContentResolver().query(uri, new
-									String[]{"_data"}, null, null, null);
+                                    String[]{"_data"}, null, null, null);
                             if (cursor.moveToFirst()) {
                                 String str = cursor.getString(0);
                                 if (str == null) {
@@ -444,7 +466,7 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
                             }
                         } catch (Exception e2) {
                             System.out.println("Exception in Transformer Prime file manager code:" +
-									" " + e2);
+                                    " " + e2);
                             reason = e2.toString();
                         }
                     }
@@ -453,7 +475,7 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
                         Resources res = getResources();
                         AlertDialog alert = mAlertBuilder.create();
                         setTitle(String.format(res.getString(R.string
-								.cannot_open_document_Reason), reason));
+                                .cannot_open_document_Reason), reason));
                         alert.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.dismiss),
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
@@ -652,7 +674,7 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
         mPageSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 mDocView.setDisplayedViewIndex((seekBar.getProgress() + mPageSliderRes / 2) /
-						mPageSliderRes);
+                        mPageSliderRes);
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -679,7 +701,7 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
         });
 
         if (core.fileFormat().startsWith("PDF") && core.isUnencryptedPDF() && !core
-				.wasOpenedFromBuffer()) {
+                .wasOpenedFromBuffer()) {
             mAnnotButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     mTopBarMode = TopBarMode.Annot;
@@ -706,7 +728,7 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
 
                 // Remove any previous search results
                 if (SearchTaskResult.get() != null && !mSearchText.getText().toString().equals
-						(SearchTaskResult.get().txt)) {
+                        (SearchTaskResult.get().txt)) {
                     SearchTaskResult.set(null);
                     mDocView.resetupChildren();
                 }
@@ -845,9 +867,9 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
     private void reflowModeSet(boolean reflow) {
         mReflow = reflow;
         mDocView.setAdapter(mReflow ? new MuPDFReflowAdapter(this, core) : new MuPDFPageAdapter
-				(this, this, core));
+                (this, this, core));
         mReflowButton.setColorFilter(mReflow ? Color.argb(0xFF, 172, 114, 37) : Color.argb(0xFF,
-				255, 255, 255));
+                255, 255, 255));
         setButtonEnabled(mAnnotButton, !reflow);
         setButtonEnabled(mSearchButton, !reflow);
         if (reflow)
@@ -861,7 +883,7 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
         //注释  切换模式 重新排版
         reflowModeSet(!mReflow);
         showInfo(mReflow ? getString(R.string.entering_reflow_mode) : getString(R.string
-				.leaving_reflow_mode));
+                .leaving_reflow_mode));
     }
 
     @Override
@@ -927,14 +949,14 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
     private void setButtonEnabled(ImageButton button, boolean enabled) {
         button.setEnabled(enabled);
         button.setColorFilter(enabled ? Color.argb(255, 255, 255, 255) : Color.argb(255, 128,
-				128, 128));
+                128, 128));
     }
 
     private void setLinkHighlight(boolean highlight) {
         mLinkHighlight = highlight;
         // LINK_COLOR tint
         mLinkButton.setColorFilter(highlight ? Color.argb(0xFF, 172, 114, 37) : Color.argb(0xFF,
-				255, 255, 255));
+                255, 255, 255));
         // Inform pages of the change.
         mDocView.setLinksEnabled(highlight);
     }
@@ -1087,7 +1109,7 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
         int currentApiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentApiVersion >= android.os.Build.VERSION_CODES.HONEYCOMB) {
             SafeAnimatorInflater safe = new SafeAnimatorInflater((Activity) this, R.animator
-					.info, (View) mInfoView);
+                    .info, (View) mInfoView);
         } else {
             mInfoView.setVisibility(View.VISIBLE);
             mHandler.postDelayed(new Runnable() {
@@ -1108,6 +1130,8 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
         mInkForward = (ImageButton) mButtonsView.findViewById(R.id.ink_btn_forward);
         mInkColor = (ImageButton) mButtonsView.findViewById(R.id.ink_btn_color);
         mInkBold = (ImageButton) mButtonsView.findViewById(R.id.ink_btn_bold);
+
+        mSeekBar = (SeekBar) mButtonsView.findViewById(R.id.sb_progress);
 
         //注释 添加按钮
         mBackButton = (ImageButton) mButtonsView.findViewById(R.id.backButton);
@@ -1427,7 +1451,6 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
         showInfo(getString(R.string.draw_annotation));
 
 
-
     }
 
     //注释  绘制墨迹完毕 取消保存
@@ -1466,7 +1489,8 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
                 if (pageView != null)
                     success = pageView.copySelection();
                 mTopBarMode = TopBarMode.More;
-                showInfo(success ? getString(R.string.copied_to_clipboard) : getString(R.string.no_text_selected));
+                showInfo(success ? getString(R.string.copied_to_clipboard) : getString(R.string
+                        .no_text_selected));
                 break;
 
             case Highlight: //高亮
@@ -1507,6 +1531,7 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
         mTopBarSwitcher.setDisplayedChild(mTopBarMode.ordinal());
         mDocView.setMode(MuPDFReaderView.Mode.Viewing); //绘制  回到观察模式
         //注释 绘制后的笔迹是走的View--getForegroundTintList--ColorStateList默认的红色
+        mSeekBar.setVisibility(View.INVISIBLE);
     }
 
     public void OnCancelSearchButtonClick(View v) {
@@ -1534,13 +1559,15 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
     }
 
     private void showKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context
+                .INPUT_METHOD_SERVICE);
         if (imm != null)
             imm.showSoftInput(mSearchText, 0);
     }
 
     private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context
+                .INPUT_METHOD_SERVICE);
         if (imm != null)
             imm.hideSoftInputFromWindow(mSearchText.getWindowToken(), 0);
     }

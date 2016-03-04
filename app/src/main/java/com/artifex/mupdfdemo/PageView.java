@@ -97,13 +97,22 @@ public abstract class PageView extends ViewGroup {
     private static final int    HIGHLIGHT_COLOR       = 0x802572AC;    //高亮颜色  橙灰
     private static final int    LINK_COLOR            = 0x80AC7225;    //链接颜色  橙
     private static final int    BOX_COLOR             = 0xFF4444FF;    //外框颜色  蓝
-    //	private static final int   INK_COLOR             = 0xFFFF0000;    //墨迹颜色  红
-    private static final int    INK_COLOR             = 0xFF000000;
-    private static final float  INK_THICKNESS         = 5.0f;     //墨迹宽度
+//    private static final int    INK_COLOR             = 0xFF000000;  //墨迹颜色  黑
+    private int    INK_COLOR             = 0xFF000000;
+
+    //    private static final float  INK_THICKNESS         = 5.0f;     //墨迹宽度
+    private              float  INK_THICKNESS         = 5.0f;     //墨迹宽度
     private static final int    BACKGROUND_COLOR      = 0xFFFFFFFF;  //背景颜色
     private static final int    PROGRESS_DIALOG_DELAY = 200;  //加载延时时间
     private static final String TAG                   = "PageView";
 
+    //外部设置属性
+    public void setINK_THICKNESS(float INK_THICKNESS) {
+        this.INK_THICKNESS = INK_THICKNESS;
+    }
+    public void setINK_COLOR(int INK_COLOR) {
+        this.INK_COLOR = INK_COLOR;
+    }
 
     protected final Context mContext;
     protected       int     mPageNumber;

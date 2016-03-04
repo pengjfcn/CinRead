@@ -64,5 +64,7 @@ public interface MuPDFView {
 	public void releaseResources();
 	public void releaseBitmaps();
 
-	//注释  添加undo和redo方法
+	//注释  添加设置color和bold
+	public void setINK_THICKNESS(float INK_THICKNESS);
+	public void setINK_COLOR(int INK_COLOR);
 }
