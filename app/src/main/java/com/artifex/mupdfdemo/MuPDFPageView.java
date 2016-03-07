@@ -701,7 +701,9 @@ public class MuPDFPageView extends PageView implements MuPDFView {
 
 		mLoadWidgetAreas.execute();
 
+		//注释
 		super.setPage(page, size);
+
 	}
 
 	public void setScale(float scale) {

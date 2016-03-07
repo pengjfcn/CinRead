@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.cinread.ebook.ReadView.ReadView;
+import com.cinread.ebook.txt.ReadView;
 
 import java.io.File;
 

@@ -1,4 +1,4 @@
-package com.cinread.ebook.ReadView;
+package com.cinread.ebook.txt;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,8 +14,8 @@ import com.cinread.ebook.utils.LogUtils;
 
 
 public class ReadView extends View {
-	private Bitmap                                        mCurrentPageBitmap;
-	private Canvas                                        mCurrentPageCanvas;
+	private Bitmap  mCurrentPageBitmap;
+	private Canvas  mCurrentPageCanvas;
 	private PageFactory pagefactory;
 	private int font_size = 30;  //字体大小
 	private SharedPreferences sp;
@@ -54,6 +54,7 @@ public class ReadView extends View {
 		canvas.restore();
 	}
 
+	//设置阅读背景颜色
 	public void setBackGround(Bitmap bitmap){
 		pagefactory.setBgBitmap(bitmap);
 	}
@@ -73,6 +74,7 @@ public class ReadView extends View {
         editor2.apply();
 	}
 
+	//设置阅读字体大小
 	public void setFont_size(int font_size) {
 		pagefactory.setTextFont(font_size);
 	}

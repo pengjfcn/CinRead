@@ -1,4 +1,4 @@
-package com.cinread.ebook.ReadView;
+package com.cinread.ebook.txt;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -18,6 +18,9 @@ import java.nio.channels.FileChannel;
 import java.text.DecimalFormat;
 import java.util.Vector;
 
+/**
+ * 提供阅读相关的属性 entities
+ */
 public class PageFactory {
 	private int mHeight, mWidth;
 	private int mVisibleHeight, mVisibleWidth;
@@ -47,6 +50,8 @@ public class PageFactory {
 		mFontSize = font_size;
 		mVisibleHeight = mHeight - marginHeight *2 - mFontSize;
 		mVisibleWidth = mWidth - marginWeight *2;
+		//如何让用户选择字体?
+		//Typeface.createFromFile();
 		Typeface typeface = Typeface.createFromAsset(context.getAssets(),"fonts/FZBYSK.TTF");
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaint.setTextSize(mFontSize);
@@ -114,7 +119,7 @@ public class PageFactory {
 			
 			m_mbBufBeginPos -= parabuffer.length;
 			try {
-				strParagraph = new String(parabuffer, "GBK");
+				strParagraph = new String(parabuffer, "GBK");  //
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

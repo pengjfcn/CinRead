@@ -1178,6 +1178,7 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
     public void OnCancelMoreButtonClick(View v) {
         mTopBarMode = TopBarMode.Main;
         mTopBarSwitcher.setDisplayedChild(mTopBarMode.ordinal());
+        mSeekBar.setVisibility(View.INVISIBLE);
     }
 
     //打印
@@ -1650,6 +1651,8 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
         mFilePicker = picker;
         Intent intent = new Intent(this, ChoosePDFActivity.class);
         intent.setAction(ChoosePDFActivity.PICK_KEY_FILE);
+        intent.setAction(ChoosePDFActivity.PICK_PDF);
+        intent.setAction(ChoosePDFActivity.PICK_TXT);
         startActivityForResult(intent, FILEPICK_REQUEST);
     }
 

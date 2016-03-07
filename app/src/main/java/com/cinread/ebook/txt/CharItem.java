@@ -1,4 +1,4 @@
-package com.cinread.ebook.ReadView;
+package com.cinread.ebook.txt;
 
 /**
  * Created by leilei.liu on 2015/12/28 0028.

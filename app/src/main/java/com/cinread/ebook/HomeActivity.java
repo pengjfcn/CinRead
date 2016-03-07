@@ -61,6 +61,11 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
     }
 
     private void initView() {
+        //上方
+//        ListView listView = View.inflate(UIUtils.getContext(),R.layout.,null);
+//        mFrameLayout.addView();
+
+        //下方
         //得到包管理器
         final PackageManager packageManager = getPackageManager();
         final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);

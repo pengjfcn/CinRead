@@ -26,11 +26,14 @@ import java.util.Map;
 
 enum Purpose {
 	PickPDF,
-	PickKeyFile,
+	PickTXT,
+	PickKeyFile
 }
 
 public class ChoosePDFActivity extends ListActivity {
-	static public final String PICK_KEY_FILE = "com.artifex.mupdfdemo.PICK_KEY_FILE";
+	static public final String PICK_KEY_FILE = "PICK_KEY_FILE";
+	public static final String PICK_PDF = "PICK_PDF";
+	public static final String PICK_TXT = "PICK_TXT";
 	static private File  mDirectory;
 	static private Map<String, Integer> mPositions = new HashMap<String, Integer>();
 	private File         mParent;
@@ -45,7 +48,16 @@ public class ChoosePDFActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mPurpose = PICK_KEY_FILE.equals(getIntent().getAction()) ? Purpose.PickKeyFile : Purpose.PickPDF;
+		//注释 区分pdf和txt
+		String action = getIntent().getAction();
+//		if (action.equals(PICK_KEY_FILE)){
+//			mPurpose = Purpose.PickKeyFile;
+//		}else if (action.equals(PICK_PDF)){
+//			mPurpose = Purpose.PickPDF;
+//		}else if (action.equals(PICK_TXT)){
+//			mPurpose = Purpose.PickTXT;
+//		}
+		mPurpose = PICK_KEY_FILE.equals(action) ? Purpose.PickKeyFile : Purpose.PickPDF;
 
 
 		String storageState = Environment.getExternalStorageState();
@@ -68,7 +80,8 @@ public class ChoosePDFActivity extends ListActivity {
 		}
 
 		if (mDirectory == null)
-			mDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+//			mDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+			mDirectory = Environment.getExternalStorageDirectory();
 
 		// Create a list adapter...
 		adapter = new ChoosePDFAdapter(getLayoutInflater());

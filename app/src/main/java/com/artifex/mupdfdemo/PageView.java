@@ -94,11 +94,11 @@ class TextSelector {
 
 //注释  绘制的类
 public abstract class PageView extends ViewGroup {
-    private static final int    HIGHLIGHT_COLOR       = 0x802572AC;    //高亮颜色  橙灰
-    private static final int    LINK_COLOR            = 0x80AC7225;    //链接颜色  橙
-    private static final int    BOX_COLOR             = 0xFF4444FF;    //外框颜色  蓝
-//    private static final int    INK_COLOR             = 0xFF000000;  //墨迹颜色  黑
-    private int    INK_COLOR             = 0xFF000000;
+    private static final int HIGHLIGHT_COLOR = 0x802572AC;    //高亮颜色  橙灰
+    private static final int LINK_COLOR      = 0x80AC7225;    //链接颜色  橙
+    private static final int BOX_COLOR       = 0xFF4444FF;    //外框颜色  蓝
+    //    private static final int    INK_COLOR             = 0xFF000000;  //墨迹颜色  黑
+    private              int INK_COLOR       = 0xFF000000;
 
     //    private static final float  INK_THICKNESS         = 5.0f;     //墨迹宽度
     private              float  INK_THICKNESS         = 5.0f;     //墨迹宽度
@@ -106,10 +106,14 @@ public abstract class PageView extends ViewGroup {
     private static final int    PROGRESS_DIALOG_DELAY = 200;  //加载延时时间
     private static final String TAG                   = "PageView";
 
+    private Paint paint;
+
+
     //外部设置属性
     public void setINK_THICKNESS(float INK_THICKNESS) {
         this.INK_THICKNESS = INK_THICKNESS;
     }
+
     public void setINK_COLOR(int INK_COLOR) {
         this.INK_COLOR = INK_COLOR;
     }
@@ -120,12 +124,12 @@ public abstract class PageView extends ViewGroup {
     protected       Point   mSize;   // Size of page at minimum zoom
     protected       float   mSourceScale;
 
-    private ImageView                           mEntire; // Image rendered at minimum zoom
-    private Bitmap                              mEntireBm;
-    private Matrix                              mEntireMat;
-    private AsyncTask<Void, Void, TextWord[][]> mGetText;
-    private AsyncTask<Void, Void, LinkInfo[]>   mGetLinkInfo;
-    private CancellableAsyncTask<Void, Void>    mDrawEntire;
+    protected ImageView                           mEntire; // Image rendered at minimum zoom
+    protected Bitmap                              mEntireBm;
+    protected Matrix                              mEntireMat;
+    private   AsyncTask<Void, Void, TextWord[][]> mGetText;
+    private   AsyncTask<Void, Void, LinkInfo[]>   mGetLinkInfo;
+    private   CancellableAsyncTask<Void, Void>    mDrawEntire;
 
     private   Point                            mPatchViewSize; // View size on the basis of which
     // the patch was created
@@ -139,7 +143,7 @@ public abstract class PageView extends ViewGroup {
     private   TextWord                         mText[][];
     private   RectF                            mItemSelectBox;
     protected ArrayList<ArrayList<PointF>>     mDrawing;
-    private   View                             mSearchView;
+    protected View                             mSearchView;
     private   boolean                          mIsBlank;
     private   boolean                          mHighlightLinks;
 
@@ -156,6 +160,7 @@ public abstract class PageView extends ViewGroup {
         mEntireBm = Bitmap.createBitmap(parentSize.x, parentSize.y, Config.ARGB_8888);
         mPatchBm = sharedHqBm;
         mEntireMat = new Matrix();
+        paint = new Paint();
     }
 
     protected abstract CancellableTaskDefinition<Void, Void> getDrawPageTask(Bitmap bm, int sizeX,
@@ -351,7 +356,7 @@ public abstract class PageView extends ViewGroup {
                     // Work out current total scale factor
                     // from source to view
                     final float scale = mSourceScale * (float) getWidth() / (float) mSize.x;   //注释
-                    final Paint paint = new Paint();
+//                    final Paint paint = new Paint();
 
                     //当不为空以及搜索页面时，画笔设置高亮颜色，画布绘制选中时的矩形
                     if (!mIsBlank && mSearchBoxes != null) {
@@ -404,12 +409,9 @@ public abstract class PageView extends ViewGroup {
 
                     //注释  绘制墨迹
                     if (mDrawing != null) {
-                        LogUtils.d(TAG, "paint的绘制");
                         Path path = new Path();
 
                         PointF p;
-
-                        //增加撤销和恢复笔迹的功能
 
                         //						if (this.isHardwareAccelerated()){
                         //							LogUtils.d(TAG,"已经启动硬件加速");
@@ -440,9 +442,16 @@ public abstract class PageView extends ViewGroup {
                                     p = iit.next();
                                     float x = p.x * scale;
                                     float y = p.y * scale;
-                                    path.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2); //平滑曲线
+                                    LogUtils.d(TAG, x + " ---- " + y);
+                                    //注释 加二次贝塞尔曲线从最后一点，接近控制点（x1,y1）
+//                                  path.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2); //平滑曲线
+                                    float dx = Math.abs(mX - x);
+                                    float dy = Math.abs(mY - y);
+                                    if (dx>=4||dy>=4){
+                                        path.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
                                     mX = x;
                                     mY = y;
+                                    }
                                 }
                                 path.lineTo(mX, mY);
                             } else {
