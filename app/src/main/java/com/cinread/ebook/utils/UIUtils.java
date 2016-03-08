@@ -1,8 +1,10 @@
-package com.cinread.ebook;
+package com.cinread.ebook.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Handler;
+
+import com.cinread.ebook.base.BaseApplication;
 
 /**
  * @Project: mupdfdemo

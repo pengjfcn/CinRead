@@ -20,7 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.cinread.ebook.utils.LogUtils;
-import com.cinread.ebook.UIUtils;
+import com.cinread.ebook.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -572,6 +572,10 @@ public abstract class PageView extends ViewGroup {
             mDrawing.add(mDeleteDrawing.remove(mDeleteDrawing.size() - 1));
             mSearchView.invalidate();
         }
+    }
+    //晴空
+    public void clearDraw() {
+         mSearchView.invalidate();
     }
 
     protected PointF[][] getDraw() {

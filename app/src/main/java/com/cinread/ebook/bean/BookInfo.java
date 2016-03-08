@@ -10,6 +10,6 @@ package com.cinread.ebook.bean;
 public class BookInfo {
     public int cover;  //封面
     public String name; //书名
-    public String author; //作者
-    public float percent; //已阅读
+    public String author; //书名
+    public String percent; //已阅读
 }

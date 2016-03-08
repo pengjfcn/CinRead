@@ -4,13 +4,13 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <FrameLayout
+    <ListView
         android:id="@+id/homepage_fl_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
-        android:background="#33000000">
-    </FrameLayout>
+        android:background="#fff">
+    </ListView>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/homepage_vp_bottom"

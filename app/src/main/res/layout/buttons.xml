@@ -387,6 +387,16 @@
 		</RelativeLayout>
 		</ViewAnimator>
 	<TextView
+		android:id="@+id/timeNumber"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/switcher"
+		android:layout_margin="10dp"
+		android:background="@drawable/page_num"
+		android:textColor="#FFFFFF"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<TextView
 		android:id="@+id/pageNumber"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -439,7 +449,13 @@
 				android:layout_weight="1"
 				android:layout_height="wrap_content"
 				android:background="@drawable/button"
-				android:onClick="OnAcceptButtonClick"
+				android:src="@mipmap/ink_bold_btn" />
+			<ImageButton
+				android:id="@+id/ink_btn_clear"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="wrap_content"
+				android:background="@drawable/button"
 				android:src="@mipmap/ink_bold_btn" />
 		</LinearLayout>
 	</ViewAnimator>
@@ -463,7 +479,6 @@
 	<!--将seekbar换成跟touch mode 形式，主要放一些绘制相关的逻辑-->
 
 	<RelativeLayout
-		android:visibility="gone"
 		android:id="@+id/lowerButtons"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"

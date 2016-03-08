@@ -1,4 +1,4 @@
-package com.cinread.ebook;
+package com.cinread.ebook.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

@@ -56,6 +56,7 @@ public interface MuPDFView {
 //	public void cancelDraw(int i); //撤销
 	public void undoDraw(); //撤销
 	public void redoDraw(); //恢复
+	public void clearDraw(); //清空
 	public boolean saveDraw();
 	public void setChangeReporter(Runnable reporter);
 	public void update();

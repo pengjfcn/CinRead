@@ -9,15 +9,22 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.artifex.mupdfdemo.ChoosePDFActivity;
+import com.artifex.mupdfdemo.MuPDFActivity;
 import com.artifex.mupdfdemo.R;
+import com.cinread.ebook.bean.BookInfo;
+import com.cinread.ebook.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +40,16 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
     public static final  String TAG           = "HomeActivity";
     private static final float  APP_PAGE_SIZE = 8.0f;
 
-    private FrameLayout  mFrameLayout;  //TODO 上方无内容
     private ViewPager    mViewPager;
     private LinearLayout mDotContainer;
 
-    private HomePagerAdapter  mAdapter;
+    private HomePagerAdapter    mAdapter;
     private ArrayList<GridView> mGridViews;
+    private ListView mListView;
+    private List<BookInfo> mDatas;
+
+    //记录最近的阅读
+    private ViewerPreferences viewerPreferences;
 
     //    private List<ImageView> mDatas;  //图标
     //    private int[] ICONS = {R.drawable.ic_doc, R.drawable.ic_dir};
@@ -55,17 +66,14 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
     }
 
     private void init() {
-        mFrameLayout = (FrameLayout) findViewById(R.id.homepage_fl_content);
+        mListView = (ListView) findViewById(R.id.homepage_fl_content);
         mViewPager = (ViewPager) findViewById(R.id.homepage_vp_bottom);
         mDotContainer = (LinearLayout) findViewById(R.id.dots_container);
+
+        viewerPreferences = new ViewerPreferences(this);
     }
 
     private void initView() {
-        //上方
-//        ListView listView = View.inflate(UIUtils.getContext(),R.layout.,null);
-//        mFrameLayout.addView();
-
-        //下方
         //得到包管理器
         final PackageManager packageManager = getPackageManager();
         final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
@@ -116,6 +124,19 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
     private void initAdapter() {
         mAdapter = new HomePagerAdapter(UIUtils.getContext(), mGridViews);
         mViewPager.setAdapter(mAdapter);
+
+        //模拟假数据
+        mDatas = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            BookInfo info = new BookInfo();
+            info.cover = R.drawable.icon;
+            info.name = "呼啸山庄"+i;
+            info.author = "星阅"+ i;
+            info.percent = i+20+"%";
+            mDatas.add(info);
+        }
+        mListView.setAdapter(new RecentFileAdapter());
+        mListView.setOnItemClickListener(this);
     }
 
     //设置viewpager的滑动监听
@@ -145,12 +166,71 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
         });
     }
 
+    private class RecentFileAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            if (mDatas!=null){
+                return mDatas.size();
+            }
+            return 0;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            if (mDatas!=null){
+                return mDatas.get(position);
+            }
+            return 0;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder ;
+            if (convertView == null){
+                convertView = View.inflate(UIUtils.getContext(), R.layout.item_recent_file, null);
+                holder = new ViewHolder();
+                holder.ivIcon = (ImageView) convertView.findViewById(R.id.rf_iv_icon);
+                holder.tvName = (TextView) convertView.findViewById(R.id.rf_tv_name);
+                holder.tvAuthor = (TextView) convertView.findViewById(R.id.rf_tv_author);
+                holder.tvPercent = (TextView) convertView.findViewById(R.id.rf_tv_percent);
+                convertView.setTag(holder);
+            }else{
+                holder = (ViewHolder) convertView.getTag();
+            }
+            BookInfo info = mDatas.get(position);
+            holder.ivIcon.setImageResource(info.cover);
+            holder.tvName.setText(info.name);
+            holder.tvAuthor.setText(info.author);
+            holder.tvPercent.setText(info.percent);
+            return convertView;
+        }
+    }
+    class ViewHolder {
+        ImageView ivIcon;
+        TextView tvName;
+        TextView tvAuthor;
+        TextView tvPercent;
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(HomeActivity.this, "Yahoo! cindle：" + position, Toast.LENGTH_SHORT).show();
-        //模拟假数据 0 和 1 进入 PDF界面
-        if (id == 0 || id == 1){
-            Intent intent = new Intent(this, ChoosePDFActivity.class);
+        if (parent instanceof GridView) {
+            Toast.makeText(HomeActivity.this, "Yahoo! Bottom：" + position, Toast.LENGTH_SHORT).show();
+
+            //模拟假数据 0 和 1 进入 PDF界面
+            if (id == 0 || id == 1) {
+                Intent intent = new Intent(this, ChoosePDFActivity.class);
+                startActivity(intent);
+            }
+        }else if (parent instanceof ListView){
+            Toast.makeText(HomeActivity.this, "Top ：" + position, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, MuPDFActivity.class);
             startActivity(intent);
         }
     }

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.artifex.mupdfdemo.R;
+import com.cinread.ebook.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.List;

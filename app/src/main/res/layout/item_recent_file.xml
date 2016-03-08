@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants"
+                android:padding="5dp">
+
+    <ImageView
+        android:id="@+id/rf_iv_icon"
+        android:layout_width="48sp"
+        android:layout_height="60dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_highlight"/>
+
+    <LinearLayout
+        android:background="#33000000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/rf_iv_icon"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/rf_tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="name"
+            android:textSize="24sp"/>
+
+        <TextView
+            android:id="@+id/rf_tv_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="author"/>
+
+        <TextView
+            android:id="@+id/rf_tv_percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="已阅读10%"/>
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/rf_ib_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_doc"/>
+</RelativeLayout>
