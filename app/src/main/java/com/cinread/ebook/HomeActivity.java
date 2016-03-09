@@ -21,9 +21,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.artifex.mupdfdemo.ChoosePDFActivity;
-import com.artifex.mupdfdemo.MuPDFActivity;
 import com.artifex.mupdfdemo.R;
 import com.cinread.ebook.bean.BookInfo;
+import com.cinread.ebook.browser.MainBrowserActivity;
+import com.cinread.ebook.browser.ViewerPreferences;
+import com.cinread.ebook.rss.RssItem;
 import com.cinread.ebook.utils.UIUtils;
 
 import java.util.ArrayList;
@@ -45,11 +47,12 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
 
     private HomePagerAdapter    mAdapter;
     private ArrayList<GridView> mGridViews;
-    private ListView mListView;
-    private List<BookInfo> mDatas;
+    private ListView            mListView;
+    private List<BookInfo>      mDatas;
 
     //记录最近的阅读
-    private ViewerPreferences viewerPreferences;
+    private ViewerPreferences  viewerPreferences;
+    private ArrayList<RssItem> mRssItems;
 
     //    private List<ImageView> mDatas;  //图标
     //    private int[] ICONS = {R.drawable.ic_doc, R.drawable.ic_dir};
@@ -102,6 +105,7 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
             //添加动态点
             addDot(i);
         }
+
     }
 
     private void addDot(int i) {
@@ -136,6 +140,21 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
             mDatas.add(info);
         }
         mListView.setAdapter(new RecentFileAdapter());
+
+
+/*        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //RSS
+                RssReader rssReader = new RssReader("http://www.toodaylab.com/feed");
+                try {
+                    mRssItems = (ArrayList<RssItem>) rssReader.getItems();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        mListView.setAdapter(new RssAdapter());*/
         mListView.setOnItemClickListener(this);
     }
 
@@ -217,6 +236,51 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
         TextView tvAuthor;
         TextView tvPercent;
     }
+    /*private class RssAdapter extends BaseAdapter{
+
+        @Override
+        public int getCount() {
+            if (mRssItems!=null) {
+                return mRssItems.size();
+            }
+            return 0;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            if (mRssItems!=null){
+                return mRssItems.get(position);
+            }
+            return 0;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder ;
+            if (convertView == null){
+                convertView = View.inflate(UIUtils.getContext(), R.layout.item_recent_file, null);
+                holder = new ViewHolder();
+                holder.ivIcon = (ImageView) convertView.findViewById(R.id.rf_iv_icon);
+                holder.tvName = (TextView) convertView.findViewById(R.id.rf_tv_name);
+                holder.tvAuthor = (TextView) convertView.findViewById(R.id.rf_tv_author);
+                holder.tvPercent = (TextView) convertView.findViewById(R.id.rf_tv_percent);
+                convertView.setTag(holder);
+            }else{
+                holder = (ViewHolder) convertView.getTag();
+            }
+            RssItem s = mRssItems.get(position);
+            holder.tvName.setText(s.title);
+            holder.tvAuthor.setText(s.description);
+            holder.tvPercent.setText(s.imageUrl);
+            System.out.println(s.toString());
+            return convertView;
+        }
+    }*/
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -230,7 +294,9 @@ public class HomeActivity extends Activity implements AdapterView.OnItemClickLis
             }
         }else if (parent instanceof ListView){
             Toast.makeText(HomeActivity.this, "Top ：" + position, Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, MuPDFActivity.class);
+            /*Intent intent = new Intent(this, MuPDFActivity.class);
+            startActivity(intent);*/
+            Intent intent = new Intent(HomeActivity.this, MainBrowserActivity.class);
             startActivity(intent);
         }
     }

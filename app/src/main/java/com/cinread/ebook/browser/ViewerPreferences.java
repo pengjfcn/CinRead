@@ -1,4 +1,4 @@
-package com.cinread.ebook;
+package com.cinread.ebook.browser;
 
 import android.content.Context;
 import android.content.SharedPreferences;

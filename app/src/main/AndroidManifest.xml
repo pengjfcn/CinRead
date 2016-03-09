@@ -108,6 +108,9 @@
                 <data android:host="*"/>
             </intent-filter>
         </activity>
+        <activity android:name="com.cinread.ebook.browser.MainBrowserActivity">
+
+        </activity>
     </application>
 
 </manifest>
